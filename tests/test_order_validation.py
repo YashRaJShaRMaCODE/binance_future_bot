@@ -31,6 +31,11 @@ class OrderValidationTests(unittest.TestCase):
             with self.subTest(quantity=quantity), self.assertRaises(ValueError):
                 validate_order("BTCUSDT", "BUY", quantity)
 
+    def test_rejects_decimal_exponents_that_would_expand_huge_strings(self):
+        for quantity in ("1e1000000000", "1e-1000000000"):
+            with self.subTest(quantity=quantity), self.assertRaisesRegex(ValueError, "64 characters"):
+                validate_order("BTCUSDT", "BUY", quantity)
+
     def test_limit_order_requires_a_positive_price(self):
         for price in ("0", "-1", "NaN"):
             with self.subTest(price=price), self.assertRaises(ValueError):

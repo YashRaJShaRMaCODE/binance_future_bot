@@ -4,7 +4,7 @@ A small command-line example for previewing and placing USDⓈ-M Futures market 
 
 ## Setup
 
-Use Python 3.10 or later and create a virtual environment:
+Use Python 3.10 or later. Preview commands need only the Python standard library. To submit testnet orders, create a virtual environment and install the exchange client:
 
 ```powershell
 python -m venv .venv
@@ -13,11 +13,11 @@ python -m pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
-Add Futures testnet API credentials to `.env`. Keep withdrawals disabled, never reuse mainnet credentials, and do not commit `.env` or `bot.log`.
+Add Futures testnet API credentials to `.env` only if you plan to submit orders. Keep withdrawals disabled, never reuse mainnet credentials, and do not commit `.env` or `bot.log`.
 
 ## Preview and place testnet orders
 
-Commands preview by default and make no API request:
+Commands preview by default: they validate and print the order without loading credentials, contacting Binance, or creating a log file.
 
 ```powershell
 python src/market_orders.py BTCUSDT BUY 0.01

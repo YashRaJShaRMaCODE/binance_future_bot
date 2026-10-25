@@ -1,14 +1,25 @@
 import re
 from decimal import Decimal, InvalidOperation
 
+MAX_DECIMAL_TEXT_LENGTH = 64
+
 
 def positive_decimal(value, label):
+    value_text = str(value)
+    if len(value_text) > MAX_DECIMAL_TEXT_LENGTH:
+        raise ValueError(f"{label} must fit within {MAX_DECIMAL_TEXT_LENGTH} characters")
     try:
-        number = Decimal(str(value))
+        number = Decimal(value_text)
     except (InvalidOperation, ValueError):
         raise ValueError(f"{label} must be a positive decimal") from None
     if not number.is_finite() or number <= 0:
         raise ValueError(f"{label} must be a positive decimal")
+    decimal = number.as_tuple()
+    integer_digits = max(1, len(decimal.digits) + decimal.exponent)
+    fractional_digits = max(0, -decimal.exponent)
+    formatted_length = integer_digits + fractional_digits + bool(fractional_digits)
+    if formatted_length > MAX_DECIMAL_TEXT_LENGTH:
+        raise ValueError(f"{label} must fit within {MAX_DECIMAL_TEXT_LENGTH} characters")
     return format(number, "f")
 
 
